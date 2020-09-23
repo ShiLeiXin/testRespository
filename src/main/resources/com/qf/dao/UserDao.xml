@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.qf.dao.UserDao">
+
+    <select id="findAll" resultType="com.qf.pojo.User">
+        select id,name,password from t_user;
+    </select>
+    
+    <insert id="addUser">
+        <selectKey keyColumn="id" keyProperty="id" resultType="java.lang.Integer">
+            select last_insert_id();
+        </selectKey>
+        /*user.name, user.password,与下面的map用法相似，都是映射过来*/
+        insert into t_user (name , password) values (#{name}, #{password});
+    </insert>
+
+    <delete id="deleteUser">
+        delete from t_user where id = #{id};
+    </delete>
+
+    <update id="updateUser">
+        update t_user set name = #{name}, password = #{password} where id = #{id};
+    </update>
+    
+    <select id="findById" resultType="com.qf.pojo.User">
+        select id, name, password from t_user where id = #{id};
+    </select>
+    
+    <select id="findByName1" resultType="com.qf.pojo.User">
+        select * from t_user where name like concat('%', #{name}, '%');
+    </select>
+
+    <select id="findByName2" resultType="com.qf.pojo.User">
+        select * from t_user where name like #{name};
+    </select>
+
+    <select id="findByName3" resultType="com.qf.pojo.User">
+        select * from t_user where name like "%"'${name}'"%";
+    </select>
+
+    <select id="getTotalCount" resultType="java.lang.Integer">
+        select count(id) from t_user;
+    </select>
+
+    <select id="findByPageData" resultType="com.qf.pojo.User">
+        /*map.first,map.pageNum 映射*/
+        select * from t_user limit #{first}, #{pageNum};
+    </select>
+
+
+</mapper>
